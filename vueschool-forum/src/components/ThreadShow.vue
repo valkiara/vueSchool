@@ -1,9 +1,8 @@
 <template>
-    <div>
+  <div>
     <div class="col-large push-top">
 
         <h1>{{thread}}</h1>
-
         <div  v-for="postId in thread.posts" v-bind:key="postId.key"  class="post-list">
 
             <div  class="post">
