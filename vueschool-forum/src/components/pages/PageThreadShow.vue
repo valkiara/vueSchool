@@ -1,35 +1,26 @@
 <template>
     <div>
-        <div class="col-large push-top">
-            <h1>{{thread.title}}</h1>
-            <PostList :posts="posts"/>
-            <form @submit.prevent="addPost">
-              <div class="form-group">
-                <textarea 
-                name="" 
-                id="" 
-                cols="30" 
-                rows="10" 
-                class="form-input"
-                v-model="newPostText"
-                >
-                </textarea>
-              </div>
-              <div class="form-actions">
-                <button class="btn-blue">Submit Post</button>
-              </div>
-            </form>
-        </div>
+      <div class="col-large push-top">
+          <h1>{{thread.title}}</h1>
+          <PostList :posts="posts"/>
+          <postEditor
+            @save="addPost"
+            :threadId="id"
+          />
+      </div>
   </div>
 </template>
 <script>
 import sourceData from '@/data'
 import PostList from '@/components/PostList'
+import postEditor from '@/components/postEditor'
+
 console.log(sourceData)
 
 export default {
   components: {
-    PostList
+    PostList,
+    postEditor
   },
 
   props: {
@@ -41,8 +32,7 @@ export default {
 
   data () {
     return {
-      thread: sourceData.threads[this.id],
-      newPostText: ''
+      thread: sourceData.threads[this.id]
     }
   },
 
@@ -55,21 +45,16 @@ export default {
   },
 
   methods: {
-    addPost () {
-      const postId = 'greatPost' + Math.random()
-      const post = {
-        text: this.newPostText,
-        publishedAt: Math.floor(Date.now() / 1000),
-        threadId: this.id,
-        userId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
-        '.key': postId
-      }
+    addPost (eventData) {
+      const post = eventData.post
+      const postId = eventData.post['.key']
 
       this.$set(sourceData.posts, postId, post)
       this.$set(this.thread.posts, postId, post)
       this.$set(sourceData.users[post.userId].posts, postId, postId)
-      this.newPostText = ''
     }
+
   }
+
 }
 </script>
