@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/pages/PageHome'
 import ThreadShow from '@/components/pages/PageThreadShow'
 import Forum from '@/components/pages/PageForum'
+import PageProfile from '@/components/pages/PageProfile'
 import NotFound from '@/components/pages/PageNotFound'
 import Category from '@/components/pages/PageCategory'
 
@@ -25,6 +26,12 @@ export default new Router({
       path: '/forum/:id',
       name: 'Forum',
       component: Forum,
+      props: true
+    },
+    {
+      path: '/me',
+      name: 'Profile',
+      component: PageProfile,
       props: true
     },
     {
