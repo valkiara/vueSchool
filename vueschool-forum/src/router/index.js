@@ -35,6 +35,12 @@ export default new Router({
       props: true
     },
     {
+      path: '/me/edit',
+      name: 'EditProfile',
+      component: PageProfile,
+      props: {edit: true}
+    },
+    {
       path: '/category/:id',
       name: 'Category',
       component: Category,

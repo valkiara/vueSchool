@@ -2,11 +2,11 @@
   <div>
     <form @submit.prevent="save">
     <div class="form-group">
-      <textarea 
-      name="" 
-      id="" 
-      cols="30" 
-      rows="10" 
+      <textarea
+      name=""
+      id=""
+      cols="30"
+      rows="10"
       class="form-input"
       v-model="text"
       >
@@ -15,7 +15,7 @@
     <div class="form-actions">
       <button class="btn-blue">Submit Post</button>
     </div>
-  </form>    
+  </form>
   </div>
 </template>
 
@@ -38,9 +38,7 @@ export default {
     save () {
       const post = {
         text: this.text,
-        publishedAt: Math.floor(Date.now() / 1000),
-        threadId: this.threadId,
-        userId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2'
+        threadId: this.threadId
       }
 
       this.text = ''
