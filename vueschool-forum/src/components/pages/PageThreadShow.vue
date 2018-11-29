@@ -17,7 +17,7 @@
               <span style="float:right; margin-top: 2px;" class="hide-mobile text-faded text-small">3 replies by 3 contributors</span>
             </p>
           <PostList :posts="posts"/>
-          <postEditor
+          <PostEditor
             :threadId="id"
           />
       </div>
@@ -25,12 +25,12 @@
 </template>
 <script>
 import PostList from '@/components/PostList'
-import postEditor from '@/components/postEditor'
+import PostEditor from '@/components/PostEditor'
 
 export default {
   components: {
     PostList,
-    postEditor
+    PostEditor
   },
 
   props: {

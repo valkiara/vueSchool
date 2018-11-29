@@ -5,7 +5,6 @@ import sourceData from '@/data'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-
   state: {
     ...sourceData,
     authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3'
@@ -27,12 +26,7 @@ export default new Vuex.Store({
       commit('setPost', {post, postId})
       commit('appendPostToThread', {threadId: post.threadId, postId})
       commit('appendPostToUser', {userId: post.userId, postId})
-
       return Promise.resolve(state.posts[postId])
-    },
-
-    updateUser ({commit}, user) {
-      commit('setUser', {userId: user['.key'], user})
     },
 
     createThread ({state, commit, dispatch}, {text, title, forumId}) {
@@ -51,29 +45,47 @@ export default new Vuex.Store({
           .then(post => {
             commit('setThread', {threadId, thread: {...thread, firstPostId: post['.key']}})
           })
-
         resolve(state.threads[threadId])
       })
     },
 
-    updateThread ({state, commit}, {title, text, id}) {
+    updateThread ({state, commit, dispatch}, {title, text, id}) {
       return new Promise((resolve, reject) => {
         const thread = state.threads[id]
-        const post = state.posts[thread.firstPostId]
-
         const newThread = {...thread, title}
-        const newPost = {...post, text}
-
         commit('setThread', {thread: newThread, threadId: id})
-        commit('setPost', {post: newPost, postId: thread.firstPostId})
 
-        resolve(newThread)
+        dispatch('updatePost', {id: thread.firstPostId, text})
+          .then(() => {
+            resolve(newThread)
+          })
       })
+    },
+
+    updatePost ({state, commit}, {id, text}) {
+      return new Promise((resolve, reject) => {
+        const post = state.posts[id]
+        commit('setPost', {
+          postId: id,
+          post: {
+            ...post,
+            text,
+            edited: {
+              at: Math.floor(Date.now() / 1000),
+              by: state.authId
+            }
+          }
+        })
+        resolve(post)
+      })
+    },
+
+    updateUser ({commit}, user) {
+      commit('setUser', {userId: user['.key'], user})
     }
   },
 
   mutations: {
-
     setPost (state, {post, postId}) {
       Vue.set(state.posts, postId, post)
     },
@@ -97,7 +109,7 @@ export default new Vuex.Store({
     appendPostToUser (state, {postId, userId}) {
       const user = state.users[userId]
       if (!user.posts) {
-        Vue.set(user, 'post', {})
+        Vue.set(user, 'posts', {})
       }
       Vue.set(user.posts, postId, postId)
     },
@@ -118,5 +130,4 @@ export default new Vuex.Store({
       Vue.set(user.threads, threadId, threadId)
     }
   }
-
 })
