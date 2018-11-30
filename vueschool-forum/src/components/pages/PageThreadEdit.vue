@@ -1,7 +1,7 @@
 <template>
-  <div class="col-full push-top">
+  <div v-if="thread && text" class="col-full push-top">
 
-    <h1>Editing <i>{{thread.name}}</i></h1>
+    <h1>Editing <i>{{thread.title}}</i></h1>
 
     <ThreadEditor
       :title="thread.title"
@@ -9,50 +9,60 @@
       @save="save"
       @cancel="cancel"
     />
-
   </div>
 </template>
 
 <script>
-import ThreadEditor from '@/components/ThreadEditor'
-
-export default {
-
-  components: {
-    ThreadEditor
-  },
-
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-
-  computed: {
-    thread () {
-      return this.$store.state.threads[this.id]
+  import {mapActions} from 'vuex'
+  import ThreadEditor from '@/components/ThreadEditor'
+  export default {
+    components: {
+      ThreadEditor
     },
 
-    text () {
-      return this.$store.state.posts[this.thread.firstPostId].text
-    }
-  },
+    props: {
+      id: {
+        type: String,
+        required: true
+      }
+    },
 
-  methods: {
-    save ({title, text}) {
-      this.$store.dispatch('updateThread', {
-        Id: this.Id,
-        title,
-        text
-      }).then(thread => {
+    computed: {
+      thread () {
+        return this.$store.state.threads[this.id]
+      },
+
+      text () {
+        const post = this.$store.state.posts[this.thread.firstPostId]
+        return post ? post.text : null
+      }
+    },
+
+    methods: {
+      ...mapActions(['updateThread', 'fetchThread', 'fetchPost']),
+
+      save ({title, text}) {
+        this.updateThread({
+          id: this.id,
+          title,
+          text
+        }).then(thread => {
+          this.$router.push({name: 'ThreadShow', params: {id: this.id}})
+        })
+      },
+
+      cancel () {
         this.$router.push({name: 'ThreadShow', params: {id: this.id}})
-      })
+      }
     },
 
-    cancel () {
-      this.$router.push({name: 'ThreadShow', params: {id: this.id}})
+    created () {
+      this.fetchThread({id: this.id})
+        .then(thread => this.fetchPost({id: thread.firstPostId}))
     }
   }
-}
 </script>
+
+<style scoped>
+
+</style>
