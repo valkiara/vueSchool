@@ -50,7 +50,7 @@ export default new Router({
     },
     {
       path: '/me/edit',
-      name: 'EditProfile',
+      name: 'ProfileEdit',
       component: PageProfile,
       props: {edit: true}
     },
