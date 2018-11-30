@@ -1,5 +1,5 @@
 <template>
-  <div class="post">
+  <div v-if="post && user" class="post">
     <div class="user-info">
       <a href="#" class="user-name">{{user.name}}</a>
 
@@ -37,6 +37,7 @@
 
 <script>
     import PostEditor from './PostEditor'
+
     export default {
       props: {
         post: {
@@ -44,21 +45,26 @@
           type: Object
         }
       },
+
       components: {
         PostEditor
       },
+
       data () {
         return {
           editing: false
         }
       },
+
       computed: {
         user () {
           return this.$store.state.users[this.post.userId]
         },
+
         userPostsCount () {
           return this.$store.getters.userPostsCount(this.post.userId)
         },
+
         userThreadsCount () {
           return this.$store.getters.userThreadsCount(this.post.userId)
         }
@@ -67,4 +73,5 @@
 </script>
 
 <style scoped>
+
 </style>
