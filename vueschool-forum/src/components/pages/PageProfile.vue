@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-grid">
+  <div v-if="asyncDataStatus_ready" class="flex-grid">
     <UserProfileCard
       v-if="!edit"
       :user="user"
@@ -28,13 +28,18 @@
     import PostList from '@/components/PostList'
     import UserProfileCard from '@/components/UserProfileCard'
     import UserProfileCardEditor from '@/components/UserProfileCardEditor'
+    import asyncDataStatus from '@/mixins/asyncDataStatus'
     import {mapGetters} from 'vuex'
+
     export default {
       components: {
         PostList,
         UserProfileCard,
         UserProfileCardEditor
       },
+
+      mixins: [asyncDataStatus],
+
       props: {
         edit: {
           type: Boolean,

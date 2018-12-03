@@ -15,10 +15,14 @@
 <script>
   import {mapActions} from 'vuex'
   import ThreadEditor from '@/components/ThreadEditor'
+  import asyncDataStatus from '@/mixins/asyncDataStatus'
+
   export default {
     components: {
       ThreadEditor
     },
+
+    mixins: [asyncDataStatus],
 
     props: {
       id: {
@@ -59,6 +63,7 @@
     created () {
       this.fetchThread({id: this.id})
         .then(thread => this.fetchPost({id: thread.firstPostId}))
+        .then(() => { this.asyncDataStatus_fetched() })
     }
   }
 </script>
