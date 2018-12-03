@@ -64,6 +64,19 @@
       this.fetchThread({id: this.id})
         .then(thread => this.fetchPost({id: thread.firstPostId}))
         .then(() => { this.asyncDataStatus_fetched() })
+    },
+
+    beforeRouteLeave (to, from, next) {
+      if (this.hasUnsavedChanges) {
+        const confirmed = window.confirm('Are you sure you want to leave?')
+        if (confirmed) {
+          next()
+        } else {
+          next(false)
+        }
+      } else {
+        next()
+      }
     }
   }
 </script>

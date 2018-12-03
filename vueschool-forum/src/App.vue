@@ -5,7 +5,6 @@
       <router-view v-show="showPage" @ready="pageReady"/>
       <AppSpinner v-show="!showPage"/>
     </div>
-    
   </div>
 </template>
 
