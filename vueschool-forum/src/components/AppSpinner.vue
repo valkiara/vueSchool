@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  
+
 }
 </script>
 
@@ -18,7 +18,7 @@ export default {
   height: 40px;
   position: relative;
   text-align: center;
-  
+
   -webkit-animation: sk-rotate 2.0s infinite linear;
   animation: sk-rotate 2.0s infinite linear;
 }
@@ -31,7 +31,7 @@ export default {
   top: 0;
   background-color: #263959;
   border-radius: 100%;
-  
+
   -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
   animation: sk-bounce 2.0s infinite ease-in-out;
 }
@@ -52,10 +52,10 @@ export default {
 }
 
 @keyframes sk-bounce {
-  0%, 100% { 
+  0%, 100% {
     transform: scale(0.0);
     -webkit-transform: scale(0.0);
-  } 50% { 
+  } 50% {
     transform: scale(1.0);
     -webkit-transform: scale(1.0);
   }

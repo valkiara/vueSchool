@@ -8,6 +8,8 @@ import NotFound from '@/components/pages/PageNotFound'
 import Category from '@/components/pages/PageCategory'
 import ThreadCreate from '@/components/pages/PageThreadCreate'
 import ThreadEdit from '@/components/pages/PageThreadEdit'
+import Register from '@/components/pages/PageRegister'
+import SignIn from '@/components/pages/PageSignIn'
 
 Vue.use(Router)
 
@@ -47,6 +49,16 @@ export default new Router({
       name: 'Profile',
       component: PageProfile,
       props: true
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
+    },
+    {
+      path: '/signin',
+      name: 'SignIn',
+      component: SignIn
     },
     {
       path: '/me/edit',
