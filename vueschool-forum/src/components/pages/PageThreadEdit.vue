@@ -1,5 +1,5 @@
 <template>
-  <div v-if="thread && text" class="col-full push-top">
+  <div v-if="asyncDataStatus_ready" class="col-full push-top">
 
     <h1>Editing <i>{{thread.title}}</i></h1>
 
@@ -34,21 +34,24 @@
 
     computed: {
       thread () {
-        return this.$store.state.threads[this.id]
+        return this.$store.state.threads.items[this.id]
       },
 
       text () {
-        const post = this.$store.state.posts[this.thread.firstPostId]
+        const post = this.$store.state.posts.items[this.thread.firstPostId]
         return post ? post.text : null
       },
 
       hasUnsavedChanges () {
+        // this.saved is not required in this implementation because `this.thread.title` and `this.text` are reactive
+        // Thus `hasUnsavedChanges` will automatically become false when the thread is updated
         return this.$refs.editor.form.title !== this.thread.title || this.$refs.editor.form.text !== this.text
       }
     },
 
     methods: {
-      ...mapActions(['updateThread', 'fetchThread', 'fetchPost']),
+      ...mapActions('threads', ['updateThread', 'fetchThread']),
+      ...mapActions('posts', ['fetchPost']),
 
       save ({title, text}) {
         this.updateThread({
@@ -73,7 +76,7 @@
 
     beforeRouteLeave (to, from, next) {
       if (this.hasUnsavedChanges) {
-        const confirmed = window.confirm('Are you sure you want to leave?')
+        const confirmed = window.confirm('Are you sure you want to leave? Any unsaved changes will be lost!')
         if (confirmed) {
           next()
         } else {

@@ -1,5 +1,5 @@
 <template>
-  <header class="header" id="header">
+  <header class="header" id="header" v-click-outside="closeMobileNavbar" v-handle-scroll="closeMobileNavbar">
 
     <router-link
       :to="{name: 'Home'}"
@@ -8,7 +8,7 @@
       <img src="../assets/img/svg/vueschool-logo.svg">
     </router-link>
 
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" @click="mobileNavOpen = !mobileNavOpen">
       <!-- use .btn-humburger-active to open the menu -->
       <div class="top bar"></div>
       <div class="middle bar"></div>
@@ -16,9 +16,9 @@
     </div>
 
     <!-- use .navbar-open to open nav -->
-    <nav class="navbar">
+    <nav class="navbar" :class="{'navbar-open': mobileNavOpen}">
       <ul v-if="user">
-        <li class="navbar-user">
+        <li class="navbar-user" v-click-outside="closeUserDropdown">
           <a @click.prevent="userDropdownOpen = !userDropdownOpen">
             <img class="avatar-small" :src="user.avatar" alt="">
             <span>
@@ -36,11 +36,13 @@
                 <router-link :to="{name: 'Profile'}">View Profile</router-link>
               </li>
               <li class="dropdown-menu-item">
-                <a @click.prevent="$store.dispatch('signOut')">Sign Out</a>
+                <a @click.prevent="$store.dispatch('auth/signOut')">Sign Out</a>
               </li>
             </ul>
           </div>
         </li>
+        <li class="navbar-mobile-item"><router-link :to="{name: 'Profile'}">View Profile</router-link></li>
+        <li class="navbar-mobile-item"><a @click.prevent="$store.dispatch('auth/signOut')">Sign Out</a></li>
       </ul>
       <ul v-else>
         <li class="navbar-item">
@@ -56,19 +58,39 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import clickOutside from '@/directives/click-outside.js'
+  import handleScroll from '@/directives/handle-scroll'
+
   export default {
+    directives: {
+      clickOutside,
+      handleScroll
+    },
+
     data () {
       return {
-        userDropdownOpen: false
+        userDropdownOpen: false,
+        mobileNavOpen: false
       }
     },
+
     computed: {
       ...mapGetters({
-        'user': 'authUser'
+        'user': 'auth/authUser'
       })
+    },
+
+    methods: {
+      closeUserDropdown () {
+        this.userDropdownOpen = false
+      },
+      closeMobileNavbar () {
+        this.mobileNavOpen = false
+      }
     }
   }
 </script>
 
 <style scoped>
+
 </style>

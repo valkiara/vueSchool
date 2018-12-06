@@ -21,6 +21,8 @@
         ThreadEditor
       },
 
+      mixins: [asyncDataStatus],
+
       props: {
         forumId: {
           type: String,
@@ -36,18 +38,17 @@
 
       computed: {
         forum () {
-          return this.$store.state.forums[this.forumId]
+          return this.$store.state.forums.items[this.forumId]
         },
 
         hasUnsavedChanges () {
           return (this.$refs.editor.form.title || this.$refs.editor.form.text) && !this.saved
         }
       },
-    
-      mixins: [asyncDataStatus],
 
       methods: {
-        ...mapActions(['createThread', 'fetchForum']),
+        ...mapActions('threads', ['createThread']),
+        ...mapActions('forums', ['fetchForum']),
 
         save ({title, text}) {
           this.createThread({
@@ -72,7 +73,7 @@
 
       beforeRouteLeave (to, from, next) {
         if (this.hasUnsavedChanges) {
-          const confirmed = window.confirm('Are you sure you want to leave?')
+          const confirmed = window.confirm('Are you sure you want to leave? Unsaved changes will be lost.')
           if (confirmed) {
             next()
           } else {

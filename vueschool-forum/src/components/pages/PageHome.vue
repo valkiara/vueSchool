@@ -15,16 +15,17 @@ export default {
     CategoryList
   },
 
+  mixins: [asyncDataStatus],
+
   computed: {
     categories () {
-      return Object.values(this.$store.state.categories)
+      return Object.values(this.$store.state.categories.items)
     }
   },
 
-  mixins: [asyncDataStatus],
-
   methods: {
-    ...mapActions(['fetchAllCategories', 'fetchForums'])
+    ...mapActions('categories', ['fetchAllCategories']),
+    ...mapActions('forums', ['fetchForums'])
   },
 
   created () {

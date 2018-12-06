@@ -22,46 +22,48 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  import ThreadList from '@/components/ThreadList'
-  import asyncDataStatus from '@/mixins/asyncDataStatus'
+    import {mapActions} from 'vuex'
+    import ThreadList from '@/components/ThreadList'
+    import asyncDataStatus from '@/mixins/asyncDataStatus'
 
-  export default {
-    components: {
-      ThreadList
-    },
-
-    props: {
-      id: {
-        required: true,
-        type: String
-      }
-    },
-
-    mixins: [asyncDataStatus],
-
-    computed: {
-      forum () {
-        return this.$store.state.forums[this.id]
+    export default {
+      components: {
+        ThreadList
       },
 
-      threads () {
-        return Object.values(this.$store.state.threads)
-          .filter(thread => thread.forumId === this.id)
+      mixins: [asyncDataStatus],
+
+      props: {
+        id: {
+          required: true,
+          type: String
+        }
+      },
+
+      computed: {
+        forum () {
+          return this.$store.state.forums.items[this.id]
+        },
+
+        threads () {
+          return Object.values(this.$store.state.threads.items)
+            .filter(thread => thread.forumId === this.id)
+        }
+      },
+
+      methods: {
+        ...mapActions('forums', ['fetchForum']),
+        ...mapActions('threads', ['fetchThreads']),
+        ...mapActions('users', ['fetchUser'])
+      },
+
+      created () {
+        this.fetchForum({id: this.id})
+          .then(forum => this.fetchThreads({ids: forum.threads}))
+          .then(threads => Promise.all(threads.map(thread => this.fetchUser({id: thread.userId}))))
+          .then(() => { this.asyncDataStatus_fetched() })
       }
-    },
-
-    methods: {
-      ...mapActions(['fetchForum', 'fetchThreads', 'fetchUser'])
-    },
-
-    created () {
-      this.fetchForum({id: this.id})
-        .then(forum => this.fetchThreads({ids: forum.threads}))
-        .then(threads => Promise.all(threads.map(thread => this.fetchUser({id: thread.userId}))))
-        .then(() => { this.asyncDataStatus_fetched() })
     }
-  }
 </script>
 
 <style scoped>
